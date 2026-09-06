@@ -70,7 +70,7 @@ section h2 {
 /* ===== Kartu Statistik (CSS Grid) ===== */
 main section:nth-of-type(2) {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
@@ -200,6 +200,13 @@ footer {
 }
 
 /* ===== Responsive Breakpoints ===== */
+
+/* Monitor sangat lebar */
+@media (min-width: 1400px) {
+  main {
+    max-width: 1200px;
+  }
+}
 
 /* Tablet ke bawah */
 @media (max-width: 768px) {
