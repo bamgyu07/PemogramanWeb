@@ -13,7 +13,7 @@ body {
 }
 
 a {
-  color: #28b1e7;
+  color: #3e98dd;
   text-decoration: none;
 }
 
@@ -23,7 +23,7 @@ a:hover {
 
 /* ===== Header & Navbar (Flexbox) ===== */
 header {
-  background-color: #28b1e7;
+  background-color: #3e98dd;
   color: #fff;
   padding: 1rem 1.5rem;
   display: flex;
@@ -64,13 +64,13 @@ section {
 
 section h2 {
   margin-bottom: 1rem;
-  color: #28b1e7;
+  color: #3e98dd;
 }
 
 /* ===== Kartu Statistik (CSS Grid) ===== */
 main section:nth-of-type(2) {
   display: grid;
-  grid-template-columns: repeat(3, fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
@@ -90,7 +90,7 @@ main section:nth-of-type(2) article h3 {
 main section:nth-of-type(2) article p {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #28b1e7;
+  color: #3e98dd;
 }
 
 /* ===== Tabel ===== */
@@ -107,7 +107,7 @@ td {
 }
 
 thead {
-  background-color: #28b1e7;
+  background-color: #3e98dd;
   color: #fff;
 }
 
@@ -161,7 +161,7 @@ form select {
 }
 
 form button[type="submit"] {
-  background-color: #28b1e7;
+  background-color: #3e98dd;
   color: #fff;
   border: none;
   padding: 0.6rem 1.5rem;
@@ -180,4 +180,66 @@ footer {
   padding: 1.25rem;
   color: #7a8794;
   font-size: 0.9rem;
+}
+
+/* ===== Tabel Responsif ===== */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* ===== Hamburger Menu (checkbox hack) ===== */
+.nav-toggle {
+  display: none;
+}
+
+.nav-toggle-label {
+  display: none;
+  font-size: 1.6rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ===== Responsive Breakpoints ===== */
+
+/* Tablet ke bawah */
+@media (max-width: 768px) {
+  main section:nth-of-type(2) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  header {
+    position: relative;
+  }
+
+  .nav-toggle-label {
+    display: block;
+  }
+
+  header nav {
+    display: none;
+    width: 100%;
+    order: 3;
+    margin-top: 1rem;
+  }
+
+  .nav-toggle:checked ~ nav {
+    display: block;
+  }
+
+  header nav ul {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  main section:nth-of-type(2) {
+    grid-template-columns: 1fr;
+  }
+
+  form input,
+  form select {
+    max-width: 100%;
+  }
 }
