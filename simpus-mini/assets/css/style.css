@@ -188,12 +188,10 @@ footer {
 }
 
 /* ===== Hamburger Menu (checkbox hack) ===== */
-.nav-toggle {
+.nav-toggle-button {
   display: none;
-}
-
-.nav-toggle-label {
-  display: none;
+  background: none;
+  border: none;
   font-size: 1.6rem;
   color: #fff;
   cursor: pointer;
@@ -209,7 +207,7 @@ footer {
 }
 
 /* Tablet ke bawah */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   main section:nth-of-type(2) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -221,19 +219,30 @@ footer {
     position: relative;
   }
 
-  .nav-toggle-label {
+  .nav-toggle-button {
     display: block;
   }
 
   header nav {
-    display: none;
     width: 100%;
     order: 3;
     margin-top: 1rem;
+
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+
+    transition:
+      max-height 0.3s ease,
+      opacity 0.3s ease,
+      transform 0.3s ease;
   }
 
-  .nav-toggle:checked ~ nav {
-    display: block;
+  header nav.nav-open {
+    max-height: 300px;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   header nav ul {

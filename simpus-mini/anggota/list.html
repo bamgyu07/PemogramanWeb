@@ -27,6 +27,15 @@
       <section>
         <h2>Daftar Anggota</h2>
 
+        <div class="search-box">
+          <label for="search-input">Cari Anggota</label>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Ketik nama anggota..."
+          />
+        </div>
+
         <div class="table-responsive">
           <table>
             <thead>
@@ -48,7 +57,7 @@
                 <td>12 November 2023</td>
                 <td>
                   <button type="button">Edit</button>
-                  <button type="button">Hapus</button>
+                  <button type="button" class="btn-hapus">Hapus</button>
                 </td>
               </tr>
               <tr>
@@ -59,7 +68,7 @@
                 <td>22 Agustus 2023</td>
                 <td>
                   <button type="button">Edit</button>
-                  <button type="button">Hapus</button>
+                  <button type="button" class="btn-hapus">Hapus</button>
                 </td>
               </tr>
             </tbody>
@@ -71,5 +80,7 @@
     <footer>
       <p>&copy; 2026 SIMPUS-Mini &mdash; Jobsheet 1</p>
     </footer>
+
+    <script src="../assets/js/app.js"></script>
   </body>
 </html>
