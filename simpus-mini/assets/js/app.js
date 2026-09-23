@@ -1,14 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const navToggle = document.getElementById("nav-toggle");
-  const nav = document.querySelector("header nav");
-
-  if (navToggle && nav) {
-    navToggle.addEventListener("click", () => {
-      nav.classList.toggle("nav-open");
-    });
-  }
-});
-
 // ===== Hamburger menu (JS-driven, menggantikan checkbox hack) =====
 function initNavToggle() {
   const toggleBtn = document.getElementById("nav-toggle-btn");
@@ -32,7 +21,6 @@ function initHapusConfirm() {
     const row = btn.closest("tr");
     const nama = row ? row.querySelector("td")?.textContent : "data ini";
     const yakin = confirm('Yakin ingin menghapus "' + nama + '"?');
-    
     if (yakin && row) {
       row.remove();
     }

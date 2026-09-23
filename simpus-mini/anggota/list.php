@@ -1,75 +1,57 @@
-<!doctype html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SIMPUS-Mini | Daftar Anggota</title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
-  </head>
+<?php
+$page_title = "Daftar Anggota";
+include __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/koneksi.php';
 
-  <body>
-    <header>
-      <h1>SIMPUS-Mini</h1>
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
 
-      <button
-        type="button"
-        id="nav-toggle-btn"
-        class="nav-toggle-label"
-        aria-label="Menu"
-      >
-        &#9776;
-      </button>
+$daftarAnggota = $pdo->query("SELECT * FROM anggota ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+?>
+        <section>
+            <h2>Daftar Anggota</h2>
 
-      <nav>
-        <ul>
-          <li><a href="../index.html">Beranda</a></li>
-          <li><a href="../buku/list.html">Daftar Buku</a></li>
-          <li><a href="list.html">Daftar Anggota</a></li>
-          <li><a href="tambah.html">Tambah Anggota</a></li>
-        </ul>
-      </nav>
-    </header>
+            <?php if ($flash): ?>
+                <p class="flash flash-<?php echo $flash['type']; ?>"><?php echo $flash['pesan']; ?></p>
+            <?php endif; ?>
 
-    <main>
-      <section>
-        <h2>Daftar Anggota</h2>
+            <div class="search-box">
+                <label for="search-input">Cari Nama Anggota</label>
+                <input type="text" id="search-input" placeholder="Ketik nama anggota...">
+            </div>
 
-        <div class="search-box">
-          <label for="search-input">Cari Nama Anggota</label>
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Ketik nama anggota..."
-          />
-        </div>
-
-        <p id="loading-indicator" style="display: none">Memuat data...</p>
-
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>No. Anggota</th>
-                <th>Nama</th>
-                <th>Alamat</th>
-                <th>No. HP</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <!-- Baris diisi dinamis oleh assets/js/anggota.js via fetch('../data/anggota.json') -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <p>&copy; 2026 SIMPUS-Mini &mdash; Jobsheet 6</p>
-    </footer>
-
-    <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/anggota.js"></script>
-  </body>
-</html>
+            <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No. Anggota</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>No. HP</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($daftarAnggota)): ?>
+                    <tr>
+                        <td colspan="5">Belum ada data anggota. Silakan tambah lewat menu "Tambah Anggota".</td>
+                    </tr>
+                    <?php else: ?>
+                        <?php foreach ($daftarAnggota as $anggota): ?>
+                        <tr>
+                            <td><?php echo $anggota['no_anggota']; ?></td>
+                            <td><?php echo $anggota['nama']; ?></td>
+                            <td><?php echo $anggota['alamat']; ?></td>
+                            <td><?php echo $anggota['no_hp']; ?></td>
+                            <td>
+                                <button type="button">Edit</button>
+                                <button type="button" class="btn-hapus">Hapus</button>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            </div>
+        </section>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
