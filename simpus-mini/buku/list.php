@@ -11,6 +11,16 @@ $page = max(1, (int) ($_GET['page'] ?? 1));
 $offset = ($page - 1) * $perPage;
 $keyword = trim($_GET['q'] ?? '');
 
+// Proteksi CSRF untuk pencarian: jika ada kata kunci tapi token tidak valid,
+// pencarian dibatalkan dan ditampilkan pesan error.
+if ($keyword !== '' && !csrf_verify_get()) {
+    $keyword = '';
+    $flash = [
+        'type' => 'error',
+        'pesan' => 'Token pencarian tidak valid. Gunakan form pencarian di halaman ini.'
+    ];
+}
+
 if ($keyword !== '') {
     $hitung = $pdo->prepare("SELECT COUNT(*) FROM buku WHERE judul ILIKE :kw");
     $hitung->execute(['kw' => '%' . $keyword . '%']);
@@ -36,16 +46,12 @@ $totalPages = max(1, (int) ceil($totalRows / $perPage));
                 <p class="flash flash-<?php echo $flash['type']; ?>"><?php echo $flash['pesan']; ?></p>
             <?php endif; ?>
 
-            <!-- Tombol Tambah Buku HANYA TAMPIL untuk Petugas yang sudah login -->
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <p><a href="tambah.php" class="btn">+ Tambah Buku</a></p>
-            <?php endif; ?>
-
             <div class="search-box">
                 <form method="get" action="list.php">
+                    <?php echo csrf_field(); ?>
                     <span>
                         <label for="search-input">Cari Judul Buku</label><br>
-                        <input type="text" id="search-input" name="q" value="<?php echo htmlspecialchars($keyword); ?>" placeholder="Ketik judul buku...">
+                        <input type="text" id="search-input" name="q" value="<?php echo e($keyword); ?>" placeholder="Ketik judul buku...">
                     </span>
                     <button type="submit">Cari</button>
                 </form>
@@ -59,32 +65,29 @@ $totalPages = max(1, (int) ceil($totalRows / $perPage));
                         <th>Pengarang</th>
                         <th>Tahun</th>
                         <th>Stok</th>
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                            <th>Aksi</th>
-                        <?php endif; ?>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($daftarBuku)): ?>
                     <tr>
-                        <td colspan="<?php echo isset($_SESSION['user_id']) ? '5' : '4'; ?>">Tidak ada data buku yang cocok.</td>
+                        <td colspan="5">Tidak ada data buku yang cocok.</td>
                     </tr>
                     <?php else: ?>
                         <?php foreach ($daftarBuku as $buku): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($buku['judul']); ?></td>
-                            <td><?php echo htmlspecialchars($buku['pengarang']); ?></td>
-                            <td><?php echo htmlspecialchars($buku['tahun']); ?></td>
-                            <td><?php echo htmlspecialchars($buku['stok']); ?></td>
-                            <?php if (isset($_SESSION['user_id'])): ?>
+                            <td><?php echo e($buku['judul']); ?></td>
+                            <td><?php echo e($buku['pengarang']); ?></td>
+                            <td><?php echo $buku['tahun']; ?></td>
+                            <td><?php echo $buku['stok']; ?></td>
                             <td>
                                 <a href="edit.php?id=<?php echo $buku['id']; ?>" class="btn-edit">Edit</a>
                                 <form class="form-hapus" method="post" action="hapus.php">
                                     <input type="hidden" name="id" value="<?php echo $buku['id']; ?>">
-                                    <button type="submit" class="btn-hapus" onclick="return confirm('Yakin hapus buku ini?')">Hapus</button>
+                                    <?php echo csrf_field(); ?>
+                                    <button type="submit" class="btn-hapus">Hapus</button>
                                 </form>
                             </td>
-                            <?php endif; ?>
                         </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

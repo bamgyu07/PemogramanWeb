@@ -1,50 +1,57 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
-$page_title = "Tambah Buku";
-include __DIR__ . '/../includes/header.php';
+require __DIR__ . '/../includes/csrf.php';
+require __DIR__ . '/../includes/koneksi.php';
 
-$flash = $_SESSION['flash'] ?? null;
-unset($_SESSION['flash']);
-?>
-        <section>
-            <h2>Tambah Buku</h2>
+csrf_verify();
 
-            <?php if ($flash): ?>
-                <p class="flash flash-<?php echo $flash['type']; ?>"><?php echo $flash['pesan']; ?></p>
-            <?php endif; ?>
+$id = $_POST['id'] ?? null;
+$judul = trim($_POST['judul'] ?? '');
+$pengarang = trim($_POST['pengarang'] ?? '');
+$tahun = $_POST['tahun'] ?? '';
+$isbn = trim($_POST['isbn'] ?? '');
+$stok = $_POST['stok'] ?? '';
+$kategori = trim($_POST['kategori'] ?? '');
 
-            <form id="form-tambah" method="post" action="proses_tambah.php">
-                <p>
-                    <label for="judul">Judul</label><br>
-                    <input type="text" id="judul" name="judul" required>
-                </p>
-                <p>
-                    <label for="pengarang">Pengarang</label><br>
-                    <input type="text" id="pengarang" name="pengarang" required>
-                </p>
-                <p>
-                    <label for="tahun">Tahun Terbit</label><br>
-                    <input type="number" id="tahun" name="tahun" min="1900" max="2026" required>
-                </p>
-                <p>
-                    <label for="isbn">ISBN</label><br>
-                    <input type="text" id="isbn" name="isbn">
-                </p>
-                <p>
-                    <label for="stok">Stok</label><br>
-                    <input type="number" id="stok" name="stok" min="0" required>
-                </p>
-                <p>
-                    <label for="kategori">Kategori</label><br>
-                    <select id="kategori" name="kategori">
-                        <option value="fiksi">Fiksi</option>
-                        <option value="non-fiksi">Non-Fiksi</option>
-                        <option value="referensi">Referensi</option>
-                    </select>
-                </p>
-                <p>
-                    <button type="submit">Simpan</button>
-                </p>
-            </form>
-        </section>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+if (!$id) {
+    header('Location: list.php');
+    exit;
+}
+
+$errors = [];
+if ($judul === '') {
+    $errors[] = "Judul wajib diisi.";
+}
+if ($pengarang === '') {
+    $errors[] = "Pengarang wajib diisi.";
+}
+if (!is_numeric($tahun) || $tahun < 1900 || $tahun > 2026) {
+    $errors[] = "Tahun harus di antara 1900-2026.";
+}
+if (!is_numeric($stok) || $stok < 0) {
+    $errors[] = "Stok tidak boleh negatif.";
+}
+
+if (!empty($errors)) {
+    $_SESSION['flash'] = ['type' => 'error', 'pesan' => implode(' ', $errors)];
+    header('Location: edit.php?id=' . urlencode($id));
+    exit;
+}
+
+$stmt = $pdo->prepare(
+    "UPDATE buku SET judul = :judul, pengarang = :pengarang, tahun = :tahun,
+     isbn = :isbn, stok = :stok, kategori = :kategori WHERE id = :id"
+);
+$stmt->execute([
+    'judul' => $judul,
+    'pengarang' => $pengarang,
+    'tahun' => (int) $tahun,
+    'isbn' => $isbn,
+    'stok' => (int) $stok,
+    'kategori' => $kategori,
+    'id' => $id,
+]);
+
+$_SESSION['flash'] = ['type' => 'success', 'pesan' => 'Buku berhasil diperbarui.'];
+header('Location: list.php');
+exit;

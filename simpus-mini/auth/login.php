@@ -1,37 +1,39 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (isset($_SESSION['user_id'])) {
     header('Location: ../index.php');
     exit;
 }
-include '../includes/header.php';
+
+$page_title = "Login";
+include __DIR__ . '/../includes/header.php';
+
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
 ?>
+        <section>
+            <h2>Login Petugas</h2>
 
-<div class="container mt-5" style="max-width: 400px;">
-    <h2>Login Petugas</h2>
-    <?php if (isset($_GET['error'])): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($_GET['error']) ?></div>
-    <?php endif; ?>
-    <?php if (isset($_GET['success'])): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($_GET['success']) ?></div>
-    <?php endif; ?>
-    
-    <form action="proses_login.php" method="POST">
-        <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input type="text" name="username" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" required>
-        </div>
-        <!-- Tambahan Checkbox Remember Me -->
-        <div class="mb-3 form-check">
-            <input type="checkbox" name="remember_me" class="form-check-input" id="remember_me">
-            <label class="form-check-label" for="remember_me">Remember Me</label>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
-</div>
+            <?php if ($flash): ?>
+                <p class="flash flash-<?php echo $flash['type']; ?>"><?php echo $flash['pesan']; ?></p>
+            <?php endif; ?>
 
-<?php include '../includes/footer.php'; ?>
+            <form method="post" action="proses_login.php">
+                <?php echo csrf_field(); ?>
+                <p>
+                    <label for="username">Username</label><br>
+                    <input type="text" id="username" name="username" required>
+                </p>
+                <p>
+                    <label for="password">Password</label><br>
+                    <input type="password" id="password" name="password" required>
+                </p>
+                <p>
+                    <button type="submit">Masuk</button>
+                </p>
+            </form>
+            <p>Belum punya akun? <a href="register.php">Daftar di sini</a></p>
+        </section>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

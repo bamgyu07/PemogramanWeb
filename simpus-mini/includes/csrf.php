@@ -23,3 +23,12 @@ function csrf_verify()
         die('Permintaan ditolak: token CSRF tidak valid atau kedaluwarsa.');
     }
 }
+
+// Versi GET: mengembalikan true/false (tidak die()), karena dipanggil
+// setelah header.php sudah mengeluarkan HTML sehingga status 403
+// tidak bisa dikirim lagi.
+function csrf_verify_get()
+{
+    $token = $_GET['csrf_token'] ?? '';
+    return $token !== '' && hash_equals($_SESSION['csrf_token'] ?? '', $token);
+}

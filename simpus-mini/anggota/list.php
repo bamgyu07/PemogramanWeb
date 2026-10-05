@@ -41,7 +41,7 @@ $totalPages = max(1, (int) ceil($totalRows / $perPage));
                 <form method="get" action="list.php">
                     <span>
                         <label for="search-input">Cari Nama Anggota</label><br>
-                        <input type="text" id="search-input" name="q" value="<?php echo $keyword; ?>" placeholder="Ketik nama anggota...">
+                        <input type="text" id="search-input" name="q" value="<?php echo e($keyword); ?>" placeholder="Ketik nama anggota...">
                     </span>
                     <button type="submit">Cari</button>
                 </form>
@@ -66,21 +66,17 @@ $totalPages = max(1, (int) ceil($totalRows / $perPage));
                     <?php else: ?>
                         <?php foreach ($daftarAnggota as $anggota): ?>
                         <tr>
-                            <td><?php echo $anggota['no_anggota']; ?></td>
-                            <td><?php echo $anggota['nama']; ?></td>
-                            <td><?php echo $anggota['alamat']; ?></td>
-                            <td><?php echo $anggota['no_hp']; ?></td>
+                            <td><?php echo e($anggota['no_anggota']); ?></td>
+                            <td><?php echo e($anggota['nama']); ?></td>
+                            <td><?php echo e($anggota['alamat']); ?></td>
+                            <td><?php echo e($anggota['no_hp']); ?></td>
                             <td>
-                                <td>
-                                    <a href="edit.php?id=<?php echo $anggota['id']; ?>" class="btn-edit">Edit</a>
-                                    
-                                    <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>
-                                        <form class="form-hapus" method="post" action="hapus.php">
-                                            <input type="hidden" name="id" value="<?php echo $anggota['id']; ?>">
-                                            <button type="submit" class="btn-hapus" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
-                                        </form>
-                                    <?php endif; ?>
-                                </td>
+                                <a href="edit.php?id=<?php echo $anggota['id']; ?>" class="btn-edit">Edit</a>
+                                <form class="form-hapus" method="post" action="hapus.php">
+                                    <input type="hidden" name="id" value="<?php echo $anggota['id']; ?>">
+                                    <?php echo csrf_field(); ?>
+                                    <button type="submit" class="btn-hapus">Hapus</button>
+                                </form>
                             </td>
                         </tr>
                         <?php endforeach; ?>
