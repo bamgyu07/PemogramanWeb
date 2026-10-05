@@ -1,5 +1,5 @@
 <?php
-session_start();
+require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/koneksi.php';
 
 $judul = trim($_POST['judul'] ?? '');
@@ -9,8 +9,6 @@ $isbn = trim($_POST['isbn'] ?? '');
 $stok = $_POST['stok'] ?? '';
 $kategori = trim($_POST['kategori'] ?? '');
 
-// Validasi server-side — wajib ada meski sudah divalidasi JS di Jobsheet 5,
-// karena validasi client bisa dilewati (nonaktifkan JS / kirim request manual).
 $errors = [];
 if ($judul === '') {
     $errors[] = "Judul wajib diisi.";
@@ -23,6 +21,10 @@ if (!is_numeric($tahun) || $tahun < 1900 || $tahun > 2026) {
 }
 if (!is_numeric($stok) || $stok < 0) {
     $errors[] = "Stok tidak boleh negatif.";
+}
+
+if ($isbn !== '' && !preg_match('/^[0-9-]+$/', $isbn)) {
+    $errors[] = "ISBN hanya boleh berisi angka dan tanda penghubung (-)";
 }
 
 if (!empty($errors)) {
