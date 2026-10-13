@@ -8,7 +8,7 @@ $sudahLogin = isset($_SESSION['user_id']);
 
 // Prefix relatif ke root proyek ini (bukan root domain) — supaya
 // /assets, /index.php, dst tetap benar walau proyek diakses lewat
-// subfolder (mis. dp2026.test/kode-praktikum/jobsheet-11/), bukan cuma
+// subfolder (mis. dp2026.test/kode-praktikum/jobsheet-12/), bukan cuma
 // lewat vhost yang document root-nya langsung folder ini.
 $__jobsheetRoot = dirname(__DIR__);
 $__scriptDir = dirname($_SERVER['SCRIPT_FILENAME']);
@@ -35,6 +35,9 @@ $base = $__rel === '' ? '' : str_repeat('../', substr_count($__rel, '/') + 1);
                 <li><a href="<?php echo $base; ?>buku/tambah.php">Tambah Buku</a></li>
                 <li><a href="<?php echo $base; ?>anggota/list.php">Daftar Anggota</a></li>
                 <li><a href="<?php echo $base; ?>anggota/tambah.php">Tambah Anggota</a></li>
+                <li><a href="<?php echo $base; ?>peminjaman/tambah.php">Peminjaman Baru</a></li>
+                <li><a href="<?php echo $base; ?>peminjaman/kembali.php">Pengembalian</a></li>
+                <li><a href="<?php echo $base; ?>peminjaman/riwayat.php">Riwayat</a></li>
                 <?php endif; ?>
             </ul>
         </nav>
