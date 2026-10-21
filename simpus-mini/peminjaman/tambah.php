@@ -1,7 +1,9 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
-$page_title = "Peminjaman Baru";
+require __DIR__ . '/../includes/csrf.php';
 include __DIR__ . '/../includes/header.php';
+
+$page_title = "Peminjaman Baru";
 require __DIR__ . '/../includes/koneksi.php';
 
 // Ambil data anggota (sekaligus menampilkan No HP)
@@ -29,10 +31,11 @@ $daftar_buku = $stmt_buku->fetchAll();
         <?php endif; ?>
 
         <form action="proses_tambah.php" method="POST" class="card p-4 shadow-sm bg-white">
+            <?= csrf_field() ?>
             <div class="mb-3">
                 <label for="id_anggota" class="form-label">Pilih Anggota</label>
                 <select name="id_anggota" id="id_anggota" class="form-control" required>
-                    <option value="">-- Pilih Anggota --</option>
+                    <option value="">Pilih Anggota</option>
                     <?php foreach ($daftar_anggota as $anggota): ?>
                         <option value="<?= $anggota['id'] ?>"><?= htmlspecialchars($anggota['nama']) ?> (No HP: <?= htmlspecialchars($anggota['no_hp'] ?? '-') ?>)</option>
                     <?php endforeach; ?>
@@ -42,7 +45,7 @@ $daftar_buku = $stmt_buku->fetchAll();
             <div class="mb-3">
                 <label for="id_buku" class="form-label">Pilih Buku (Stok > 0)</label>
                 <select name="id_buku" id="id_buku" class="form-control" required>
-                    <option value="">-- Pilih Buku --</option>
+                    <option value="">Pilih Buku</option>
                     <?php foreach ($daftar_buku as $buku): ?>
                         <option value="<?= $buku['id'] ?>"><?= htmlspecialchars($buku['judul']) ?> (Stok: <?= $buku['stok'] ?>)</option>
                     <?php endforeach; ?>
